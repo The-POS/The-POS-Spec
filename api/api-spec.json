@@ -2,8 +2,12 @@
     "openapi": "3.1.0",
     "info": {
         "title": "POS",
-        "version": "1.0",
-        "summary": "fetch products of pos"
+        "version": "2.0",
+        "summary": "fetch products of pos",
+        "contact": {
+            "name": "Alaa Alsalehi",
+            "email": "alaadiaa@gmail.com"
+        }
     },
     "servers": [
         {
@@ -12,10 +16,92 @@
         }
     ],
     "paths": {
-        "/api/v1/products": {
+        "/api/v2/products": {
             "get": {
                 "summary": "Get products",
                 "operationId": "ProductController@index",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductPaginator"
+                                },
+                                "examples": {
+                                    "example-1": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "sku": "72527273070",
+                                                    "name": "UPCA prodcut",
+                                                    "price": 100,
+                                                    "tax_rate": 10,
+                                                    "taxed_price": 110,
+                                                    "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                                                    "product_group": {
+                                                        "id": 10,
+                                                        "name": "products",
+                                                        "parent": 1,
+                                                        "is_group": false,
+                                                        "disabled": true
+                                                    },
+                                                    "sale_price": 75,
+                                                    "taxed_sale_price": 82.5,
+                                                    "quantity": 0,
+                                                    "available": false
+                                                }
+                                            ],
+                                            "links": {
+                                                "links": {
+                                                    "first": "http://thepos.test/api/v1/products?page=1",
+                                                    "last": "http://thepos.test/api/v1/products?page=1"
+                                                }
+                                            },
+                                            "meta": {
+                                                "current_page": 1,
+                                                "from": 1,
+                                                "last_page": 1,
+                                                "path": "http://thepos.test/api/v1/products",
+                                                "per_page": 15,
+                                                "to": 5,
+                                                "total": 5
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "in": "query",
+                        "name": "page",
+                        "description": "page number"
+                    },
+                    {
+                        "schema": {
+                            "type": "number"
+                        },
+                        "in": "query",
+                        "name": "group",
+                        "description": "fetch only products of that category"
+                    }
+                ]
+            },
+            "parameters": []
+        },
+        "/api/v2/product-groups": {
+            "get": {
+                "summary": "Get Product Groups",
+                "operationId": "ProductGroupsController@index",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -56,6 +142,9 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Error"
                     }
                 },
                 "parameters": [
@@ -71,7 +160,7 @@
             },
             "parameters": []
         },
-        "/api/v1/sales-invoices": {
+        "/api/v2/sales-invoices": {
             "post": {
                 "summary": "Create new sales invoice",
                 "operationId": "SalesInvoiceController@store",
@@ -100,20 +189,43 @@
                                             "items": [
                                                 {
                                                     "product": {
-                                                        "sku": "978020137962",
-                                                        "name": "ean13 product",
-                                                        "price": 10,
-                                                        "tax_rate": 15,
-                                                        "taxed_price": 11.5
+                                                        "sku": "72527273070",
+                                                        "name": "UPCA prodcut",
+                                                        "price": 100,
+                                                        "tax_rate": 10,
+                                                        "taxed_price": 110,
+                                                        "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                                                        "product_group": {
+                                                            "id": 10,
+                                                            "name": "products",
+                                                            "parent": 1,
+                                                            "is_group": false,
+                                                            "disabled": true
+                                                        },
+                                                        "sale_price": 75,
+                                                        "taxed_sale_price": 82.5,
+                                                        "quantity": 0,
+                                                        "available": false
                                                     },
-                                                    "quantity": 10
+                                                    "quantity": 1,
+                                                    "selling_price": 90,
+                                                    "taxed_selling_price": 99
                                                 }
-                                            ]
+                                            ],
+                                            "customer": {
+                                                "client_id": 0,
+                                                "name": "Alaa Alsalehi",
+                                                "mobile_no": "05999999999",
+                                                "email": "a@a.com"
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Error"
                     },
                     "404": {
                         "description": "Not Found",
@@ -151,9 +263,76 @@
                             }
                         }
                     }
-                }
+                },
+                "description": ""
             },
             "parameters": []
+        },
+        "/api/v2/customers/": {
+            "get": {
+                "summary": "Your GET endpoint",
+                "tags": [],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CustomerPaginator"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Error"
+                    }
+                },
+                "operationId": "get-api-v2-customers",
+                "parameters": [
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "mobile_no",
+                        "description": "search for customer with mobile no"
+                    }
+                ]
+            },
+            "parameters": [],
+            "post": {
+                "summary": "",
+                "operationId": "post-api-v2-customers",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Customer"
+                                },
+                                "examples": {
+                                    "example-1": {
+                                        "value": {
+                                            "name": "Alaa Alsalehi",
+                                            "mobile_no": "05999999999",
+                                            "email": "a@a.com"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Error"
+                    },
+                    "409": {
+                        "description": "Aleady exist customer"
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Customer"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -179,11 +358,23 @@
                     {
                         "data": [
                             {
-                                "sku": "978020137962",
-                                "name": "ean13 product",
-                                "price": 10,
-                                "tax_rate": 15,
-                                "taxed_price": 11.5
+                                "sku": "72527273070",
+                                "name": "UPCA prodcut",
+                                "price": 100,
+                                "tax_rate": 10,
+                                "taxed_price": 110,
+                                "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                                "product_group": {
+                                    "id": 10,
+                                    "name": "products",
+                                    "parent": 1,
+                                    "is_group": false,
+                                    "disabled": true
+                                },
+                                "sale_price": 75,
+                                "taxed_sale_price": 82.5,
+                                "quantity": 0,
+                                "available": false
                             }
                         ],
                         "links": {
@@ -279,18 +470,42 @@
                 "type": "object",
                 "examples": [
                     {
-                        "sku": "978020137962",
-                        "name": "ean13 product",
-                        "price": 10,
-                        "tax_rate": 15,
-                        "taxed_price": 11.5
-                    },
-                    {
                         "sku": "72527273070",
                         "name": "UPCA prodcut",
                         "price": 100,
                         "tax_rate": 10,
-                        "taxed_price": 110
+                        "taxed_price": 110,
+                        "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                        "product_group": {
+                            "id": 10,
+                            "name": "products",
+                            "parent": 1,
+                            "is_group": false,
+                            "disabled": true
+                        },
+                        "sale_price": 75,
+                        "taxed_sale_price": 82.5,
+                        "quantity": 0,
+                        "available": false
+                    },
+                    {
+                        "sku": "978020137962",
+                        "name": "ean13 product",
+                        "price": 10,
+                        "tax_rate": 15,
+                        "taxed_price": 11.5,
+                        "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                        "product_group": {
+                            "id": 10,
+                            "name": "products",
+                            "parent": 1,
+                            "is_group": false,
+                            "disabled": true
+                        },
+                        "sale_price": 5,
+                        "taxed_sale_price": 5.75,
+                        "quantity": 10,
+                        "available": true
                     }
                 ],
                 "properties": {
@@ -314,6 +529,18 @@
                     },
                     "product_group": {
                         "$ref": "#/components/schemas/ProductGroup"
+                    },
+                    "sale_price": {
+                        "type": "number"
+                    },
+                    "taxed_sale_price": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "available": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -323,23 +550,51 @@
                 "examples": [
                     {
                         "product": {
-                            "sku": "978020137962",
-                            "name": "ean13 product",
-                            "price": 10,
-                            "tax_rate": 15,
-                            "taxed_price": 11.5
-                        },
-                        "quantity": 10
-                    },
-                    {
-                        "product": {
                             "sku": "72527273070",
                             "name": "UPCA prodcut",
                             "price": 100,
                             "tax_rate": 10,
-                            "taxed_price": 110
+                            "taxed_price": 110,
+                            "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                            "product_group": {
+                                "id": 10,
+                                "name": "products",
+                                "parent": 1,
+                                "is_group": false,
+                                "disabled": true
+                            },
+                            "sale_price": 75,
+                            "taxed_sale_price": 82.5,
+                            "quantity": 0,
+                            "available": false
                         },
-                        "quantity": 3
+                        "quantity": 1,
+                        "selling_price": 90,
+                        "taxed_selling_price": 99
+                    },
+                    {
+                        "product": {
+                            "sku": "978020137962",
+                            "name": "ean13 product",
+                            "price": 10,
+                            "tax_rate": 15,
+                            "taxed_price": 11.5,
+                            "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                            "product_group": {
+                                "id": 10,
+                                "name": "products",
+                                "parent": 1,
+                                "is_group": false,
+                                "disabled": true
+                            },
+                            "sale_price": 5,
+                            "taxed_sale_price": 5.75,
+                            "quantity": 10,
+                            "available": true
+                        },
+                        "quantity": 5,
+                        "selling_price": 5,
+                        "taxed_selling_price": 5.75
                     }
                 ],
                 "properties": {
@@ -347,6 +602,12 @@
                         "$ref": "#/components/schemas/Product"
                     },
                     "quantity": {
+                        "type": "number"
+                    },
+                    "selling_price": {
+                        "type": "number"
+                    },
+                    "taxed_selling_price": {
                         "type": "number"
                     }
                 }
@@ -360,15 +621,35 @@
                         "items": [
                             {
                                 "product": {
-                                    "sku": "978020137962",
-                                    "name": "ean13 product",
-                                    "price": 10,
-                                    "tax_rate": 15,
-                                    "taxed_price": 11.5
+                                    "sku": "72527273070",
+                                    "name": "UPCA prodcut",
+                                    "price": 100,
+                                    "tax_rate": 10,
+                                    "taxed_price": 110,
+                                    "image": "https://pixnio.com/media/perfume-fancy-product-package-wedding-ring",
+                                    "product_group": {
+                                        "id": 10,
+                                        "name": "products",
+                                        "parent": 1,
+                                        "is_group": false,
+                                        "disabled": true
+                                    },
+                                    "sale_price": 75,
+                                    "taxed_sale_price": 82.5,
+                                    "quantity": 0,
+                                    "available": false
                                 },
-                                "quantity": 10
+                                "quantity": 1,
+                                "selling_price": 90,
+                                "taxed_selling_price": 99
                             }
-                        ]
+                        ],
+                        "customer": {
+                            "client_id": 0,
+                            "name": "Alaa Alsalehi",
+                            "mobile_no": "05999999999",
+                            "email": "a@a.com"
+                        }
                     }
                 ],
                 "properties": {
@@ -376,10 +657,17 @@
                         "type": "number"
                     },
                     "items": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SalesInvoiceItem"
-                        }
+                        "allOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/SalesInvoiceItem"
+                                }
+                            }
+                        ],
+                        "type": "array"
+                    },
+                    "customer": {
+                        "$ref": "#/components/schemas/Customer"
                     }
                 }
             },
@@ -430,8 +718,184 @@
                         "type": "boolean"
                     }
                 }
+            },
+            "Customer": {
+                "title": "Customer",
+                "type": "object",
+                "examples": [
+                    {
+                        "name": "Alaa Alsalehi",
+                        "mobile_no": "05999999999",
+                        "email": "a@a.com"
+                    }
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "mobile_no": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "mobile_no"
+                ]
             }
         },
-        "securitySchemes": {}
-    }
+        "securitySchemes": {
+            "JWT": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "requestBodies": {},
+        "responses": {
+            "CustomerPaginator": {
+                "description": "Example response",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Customer"
+                                    }
+                                },
+                                "links": {
+                                    "$ref": "#/components/schemas/PaginationLinks"
+                                },
+                                "meta": {
+                                    "$ref": "#/components/schemas/PaginationMeta"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "example": {
+                                "value": {
+                                    "data": [
+                                        {
+                                            "name": "Alaa Alsalehi",
+                                            "mobile_no": "05999999999",
+                                            "email": "a@a.com"
+                                        }
+                                    ],
+                                    "links": {
+                                        "links": {
+                                            "first": "http://thepos.test/api/v1/products?page=1",
+                                            "last": "http://thepos.test/api/v1/products?page=1"
+                                        }
+                                    },
+                                    "meta": {
+                                        "current_page": 1,
+                                        "from": 1,
+                                        "last_page": 1,
+                                        "path": "http://thepos.test/api/v1/products",
+                                        "per_page": 15,
+                                        "to": 5,
+                                        "total": 5
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ProductGroupPaginator": {
+                "description": "Example response",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductGroup"
+                                    }
+                                },
+                                "links": {
+                                    "$ref": "#/components/schemas/PaginationLinks"
+                                },
+                                "meta": {
+                                    "$ref": "#/components/schemas/PaginationMeta"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "example-1": {
+                                "value": {
+                                    "data": [
+                                        {
+                                            "id": 10,
+                                            "name": "products",
+                                            "parent": 1,
+                                            "is_group": false,
+                                            "disabled": true
+                                        }
+                                    ],
+                                    "links": {
+                                        "links": {
+                                            "first": "http://thepos.test/api/v2/productGroups?page=1",
+                                            "last": "http://thepos.test/api/v2/productGroups?page=1"
+                                        }
+                                    },
+                                    "meta": {
+                                        "current_page": 1,
+                                        "from": 1,
+                                        "last_page": 1,
+                                        "path": "http://thepos.test/api/v2/productGroups",
+                                        "per_page": 15,
+                                        "to": 5,
+                                        "total": 5
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "description": "Example response",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "UnauthorizedRequest": {
+                                "value": {
+                                    "code": "401",
+                                    "message": "Unautherized request"
+                                }
+                            }
+                        }
+                    }
+                },
+                "headers": {}
+            }
+        },
+        "examples": {}
+    },
+    "security": [
+        {
+            "JWT": []
+        }
+    ]
 }
